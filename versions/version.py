@@ -5,13 +5,7 @@ from .errors import Error
 
 
 if sys.version_info[0] == 3:
-    def cmp(a, b):
-        if a > b:
-            return 1
-        elif a < b:
-            return -1
-        else:  # a == b
-            return 0
+    cmp = lambda a, b: (a > b) - (a < b)
 
 
 # Regular expression used to parse versions.
