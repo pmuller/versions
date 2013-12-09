@@ -119,7 +119,7 @@ class Version(object):
             raise InvalidVersion(version_string)
 
     def __cmp__(self, other):
-        if isinstance(other, basestring):
+        if isinstance(other, str):
             other = Version.parse(other)
         if not isinstance(other, Version):
             raise InvalidVersion(other)

@@ -108,7 +108,7 @@ def merge(constraints, new_constraint):
 
     """
     # Parse string constraints.
-    if isinstance(new_constraint, basestring):
+    if isinstance(new_constraint, str):
         new_constraint = Constraint.parse(new_constraint)
     # Merge is easy if there are no previous constraint
     if not constraints:
