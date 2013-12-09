@@ -2,7 +2,7 @@ import re
 from collections import defaultdict
 
 from .constraint import Constraint
-from .operators import eq, ne, lt, gt, le, ge, Operator
+from .operators import eq, lt, gt, le, ge
 from .errors import Error
 
 
