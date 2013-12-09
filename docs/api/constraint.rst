@@ -1,8 +1,27 @@
 constraint
 ----------
 
-The ``constraint`` module defines the :class:`Constraint` class which matches
-:class:`Version` objects (and parsable version strings).
+Constraint
+==========
+
+.. autoclass:: versions.constraint.Constraint
+    :members: operator, version, match, parse
+    :member-order: bysource
+
+Parsing
++++++++
+
+:class:`Constraint` has a convenient `parse` static method to parse
+constrints strings into :class:`Constraint` objects.
+
+Constraint strings are composed of a constraint operator,
+followed by a valid version string.
+
+Valid constraint operators:
+``==``, ``!=``, ``<``, ``>``, ``<=`` and ``>=``.
+
+Matching
+++++++++
 
 Examples::
 
@@ -18,29 +37,6 @@ Examples::
     >>> Version(1) in Constraint.parse('>= 2.0.0')
     False
 
-
-Constraint strings
-==================
-
-:class:`Constraint` has a convenient `parse` static method to parse
-constrints strings into :class:`Constraint` objects.
-
-Constraint strings are composed of a constraint operator (see next section),
-followed by a valid version string.
-
-Constraint operators
-++++++++++++++++++++
-
-Valid operators:
-``==``, ``!=``, ``<``, ``>``, ``<=`` and ``>=``.
-
-
-Constraint
-==========
-
-.. autoclass:: versions.constraint.Constraint
-    :members: operator, version, match, parse
-    :member-order: bysource
 
 InvalidConstraint
 =================
