@@ -50,6 +50,11 @@ class TestMerge(TestCase):
                           [Constraint.parse('>2')], '<2')
         self.assertRaises(ExclusiveConstraints, merge,
                           [Constraint.parse('>2')], '<=2')
+        # the first 2 constraints will be merge into ==2,
+        # which conflicts with !=2
+        self.assertRaises(ExclusiveConstraints, merge,
+                          [Constraint.parse('<=2'), Constraint.parse('>=2')],
+                          '!=2')
 
     def test(self):
         self.assertEqual(merge([Constraint.parse('>1')], '<2'),
@@ -70,3 +75,7 @@ class TestMerge(TestCase):
                          [Constraint.parse('<1.0.0')])
         self.assertEqual(merge([Constraint.parse('<=2')], '>=2'),
                          [Constraint.parse('==2.0.0')])
+        # Negative constraints should not be omitted!
+        self.assertEqual(merge([Constraint.parse('!=2')], '!=1'),
+                         [Constraint.parse('!=1.0.0'),
+                          Constraint.parse('!=2.0.0')])

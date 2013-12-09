@@ -3,7 +3,7 @@ import logging
 from collections import defaultdict
 
 from .constraint import Constraint
-from .operators import eq, lt, gt, le, ge
+from .operators import eq, lt, gt, le, ge, ne
 from .errors import Error
 
 
@@ -208,12 +208,21 @@ def merge(constraints, new_constraint):
                 eq_constraint = Constraint(eq, g_constraint.version)
                 LOGGER.debug('Merged constraints: %s and %s into %s',
                              l_constraint, g_constraint, eq_constraint)
+                l_constraint, g_constraint = None, None
             else:
                 raise ExclusiveConstraints(g_constraint, [l_constraint])
         elif g_constraint.version > l_constraint.version:
             raise ExclusiveConstraints(g_constraint, [l_constraint])
 
+    ne_constraints = [Constraint(ne, v) for v in operators[ne]]
+
     if eq_constraint:
+        # An eq constraint conflicts with other constraints
+        if g_constraint or l_constraint or ne_constraints:
+            conflict_list = [c for c in (g_constraint, l_constraint) if c]
+            conflict_list.extend(ne_constraints)
+            raise ExclusiveConstraints(eq_constraint, conflict_list)
+
         return [eq_constraint]
 
     else:
@@ -223,5 +232,7 @@ def merge(constraints, new_constraint):
             result.append(g_constraint)
         if l_constraint:
             result.append(l_constraint)
+
+        result.extend(ne_constraints)
 
         return result
