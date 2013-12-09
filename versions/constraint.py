@@ -23,8 +23,8 @@ class InvalidConstraint(Error):
     def __init__(self, constraint):
         #: The bogus constraint.
         self.constraint = constraint
-        #: The error message.
-        self.message = 'Invalid constraint: %r' % constraint
+        message = 'Invalid constraint: %r' % constraint
+        super(InvalidConstraint, self).__init__(message)
 
 
 class Constraint(object):

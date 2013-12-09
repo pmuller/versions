@@ -46,8 +46,8 @@ class InvalidVersion(Error):
     def __init__(self, version):
         #: The bogus version.
         self.version = version
-        #: The error message.
-        self.message = 'Invalid version: %r' % version
+        message = 'Invalid version: %r' % version
+        super(InvalidVersion, self).__init__(message)
 
 
 class Version(object):

@@ -14,8 +14,10 @@ class InvalidOperator(Error):
     """Raised when failing to parse an operator.
     """
     def __init__(self, operator):
+        #: The bogus operator.
         self.operator = operator
-        self.message = 'Invalid operator: %r' % operator
+        message = 'Invalid operator: %r' % operator
+        super(InvalidOperator, self).__init__(message)
 
 
 class Operator(object):

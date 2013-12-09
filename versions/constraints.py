@@ -11,10 +11,13 @@ class ExclusiveConstraints(Error):
     constraints.
     """
     def __init__(self, constraint, constraints):
+        #: The conflicting constraint.
         self.constraint = constraint
+        #: The constraints with which it conflicts.
         self.constraints = constraints
-        self.message = 'Constraint %s conflicts with constraints %s' % (
+        message = 'Constraint %s conflicts with constraints %s' % (
             constraint, ', '.join(str(c) for c in constraints))
+        super(ExclusiveConstraints, self).__init__(message)
 
 
 class Constraints(object):
