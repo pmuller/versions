@@ -1,9 +1,13 @@
 import re
+import logging
 from collections import defaultdict
 
 from .constraint import Constraint
 from .operators import eq, lt, gt, le, ge
 from .errors import Error
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 class ExclusiveConstraints(Error):
@@ -148,13 +152,22 @@ def merge(constraints, new_constraint):
     l_constraint = None
     if le_ver:
         if lt_ver:
+            le_constraint = Constraint(le, le_ver)
+            lt_constraint = Constraint(lt, lt_ver)
+
             if le_ver < lt_ver:
                 # <= 1, < 2
-                l_constraint = Constraint(le, le_ver)
+                l_constraint = le_constraint
+                l_less_restrictive_c = lt_constraint
             else:
                 # <= 2, < 1
                 # <= 2, < 2
-                l_constraint = Constraint(lt, lt_ver)
+                l_constraint = lt_constraint
+                l_less_restrictive_c = le_constraint
+
+            LOGGER.debug('Removed constraint %s because it is less '
+                         'restrictive than %s', l_less_restrictive_c,
+                         l_constraint)
         else:
             l_constraint = Constraint(le, le_ver)
     elif lt_ver:
@@ -163,13 +176,22 @@ def merge(constraints, new_constraint):
     g_constraint = None
     if ge_ver:
         if gt_ver:
+            gt_constraint = Constraint(gt, gt_ver)
+            ge_constraint = Constraint(ge, ge_ver)
+
             if ge_ver <= gt_ver:
                 # >= 1, > 2
                 # >= 2, > 2
-                g_constraint = Constraint(gt, gt_ver)
+                g_constraint = gt_constraint
+                g_less_restrictive_c = ge_constraint
             else:
                 # >= 2, > 1
-                g_constraint = Constraint(ge, ge_ver)
+                g_constraint = ge_constraint
+                g_less_restrictive_c = gt_constraint
+
+            LOGGER.debug('Removed constraint %s because it is less '
+                         'restrictive than %s', g_less_restrictive_c,
+                         g_constraint)
         else:
             g_constraint = Constraint(ge, ge_ver)
     elif gt_ver:
@@ -184,6 +206,8 @@ def merge(constraints, new_constraint):
                 # Merge >= and <= constraints on same version to a ==
                 # constraint
                 eq_constraint = Constraint(eq, g_constraint.version)
+                LOGGER.debug('Merged constraints: %s and %s into %s',
+                             l_constraint, g_constraint, eq_constraint)
             else:
                 raise ExclusiveConstraints(g_constraint, [l_constraint])
         elif g_constraint.version > l_constraint.version:
