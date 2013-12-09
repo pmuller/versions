@@ -73,7 +73,11 @@ class Constraints(object):
             Constraints.parse('>1.0.0,<2.0.0')
 
         """
-        self.constraints = merge(self.constraints, constraint)
+        # Parse string constraints
+        if isinstance(constraint, str):
+            constraint = Constraint.parse(constraint)
+        # Merge with current constraints
+        self.constraints = merge(self.constraints + [constraint])
         return self
 
     def __add__(self, constraint):
@@ -91,7 +95,11 @@ class Constraints(object):
             Constraints.parse('>1.0.0,<2.0.0')
 
         """
-        return Constraints(merge(self.constraints, constraint))
+        # Parse string constraints.
+        if isinstance(constraint, str):
+            constraint = Constraint.parse(constraint)
+        # Merge with current constraints and return a new object
+        return Constraints(merge(self.constraints + [constraint]))
 
     @classmethod
     def parse(cls, constraints_string):
@@ -99,35 +107,25 @@ class Constraints(object):
         :class:`Constraints` object.
         """
         constraint_strings = re.split(r'\s*,\s*', constraints_string)
-        return Constraints(Constraint.parse(constraint_str)
-                           for constraint_str in constraint_strings)
+        return Constraints(merge(Constraint.parse(constraint_str)
+                                 for constraint_str in constraint_strings))
 
 
-def merge(constraints, new_constraint):
-    """Merge a ``new_constraint`` into ``constraints``.
+def merge(constraints):
+    """Merge ``constraints``.
+
+    It removes dupplicate, pruned and merged constraints.
 
     :param constraints: Current constraints.
     :type constraints: Iterable of :class:`Constraint` objects.
-    :param new_constraint: New contraint to merge with current constraints.
-    :type new_constraint: string or :class:`Constraint`
     :rtype: ``list`` of :class:`Constraint` objects.
     :raises: :exc:`ExclusiveConstraints`
 
     """
-    # Parse string constraints.
-    if isinstance(new_constraint, str):
-        new_constraint = Constraint.parse(new_constraint)
-    # Merge is easy if there are no previous constraint
-    if not constraints:
-        return [new_constraint]
-    elif new_constraint.operator == eq:
-        raise ExclusiveConstraints(new_constraint, constraints)
     # Dictionary :class:`Operator`: set of :class:`Version`.
     operators = defaultdict(set)
     for constraint in constraints:
         operators[constraint.operator].add(constraint.version)
-    # Add the new constraint
-    operators[new_constraint.operator].add(new_constraint.version)
     # Get most recent version required by > constraints.
     if gt in operators:
         gt_ver = sorted(operators[gt])[-1]
@@ -197,17 +195,15 @@ def merge(constraints, new_constraint):
     elif gt_ver:
         g_constraint = Constraint(gt, gt_ver)
 
-    eq_constraint = None
-
     # Check if g_constraint and l_constraint are conflicting
     if g_constraint and l_constraint:
         if g_constraint.version == l_constraint.version:
             if g_constraint.operator == ge and l_constraint.operator == le:
                 # Merge >= and <= constraints on same version to a ==
                 # constraint
-                eq_constraint = Constraint(eq, g_constraint.version)
-                LOGGER.debug('Merged constraints: %s and %s into %s',
-                             l_constraint, g_constraint, eq_constraint)
+                operators[eq].add(g_constraint.version)
+                LOGGER.debug('Merged constraints: %s and %s into ==%s',
+                             l_constraint, g_constraint, g_constraint.version)
                 l_constraint, g_constraint = None, None
             else:
                 raise ExclusiveConstraints(g_constraint, [l_constraint])
@@ -215,24 +211,19 @@ def merge(constraints, new_constraint):
             raise ExclusiveConstraints(g_constraint, [l_constraint])
 
     ne_constraints = [Constraint(ne, v) for v in operators[ne]]
+    eq_constraints = [Constraint(eq, v) for v in operators[eq]]
 
-    if eq_constraint:
+    if eq_constraints:
+        eq_constraint = eq_constraints.pop()
         # An eq constraint conflicts with other constraints
-        if g_constraint or l_constraint or ne_constraints:
+        if g_constraint or l_constraint or ne_constraints or eq_constraints:
             conflict_list = [c for c in (g_constraint, l_constraint) if c]
             conflict_list.extend(ne_constraints)
+            conflict_list.extend(eq_constraints)
             raise ExclusiveConstraints(eq_constraint, conflict_list)
 
         return [eq_constraint]
 
     else:
-        result = []
-
-        if g_constraint:
-            result.append(g_constraint)
-        if l_constraint:
-            result.append(l_constraint)
-
-        result.extend(ne_constraints)
-
-        return result
+        constraints = ne_constraints + [g_constraint, l_constraint]
+        return [c for c in constraints if c]

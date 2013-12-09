@@ -36,46 +36,50 @@ class TestConstraints(TestCase):
 
 class TestMerge(TestCase):
 
-    def test_empty_constraints(self):
-        constraint_str = '==1'
-        constraint = Constraint.parse(constraint_str)
-        self.assertEqual(merge([], constraint_str), [constraint])
+    def assertMerge(self, input, output):
+        self.assertEqual(merge(input), output)
 
     def test_raises_ExclusiveConstraints(self):
         self.assertRaises(ExclusiveConstraints, merge,
-                          [Constraint.parse('==1')], '==2')
+                          [Constraint.parse('==1'), Constraint.parse('==2')])
         self.assertRaises(ExclusiveConstraints, merge,
-                          [Constraint.parse('>2')], '<1')
+                          [Constraint.parse('>2'), Constraint.parse('<1')])
         self.assertRaises(ExclusiveConstraints, merge,
-                          [Constraint.parse('>2')], '<2')
+                          [Constraint.parse('>2'), Constraint.parse('<2')])
         self.assertRaises(ExclusiveConstraints, merge,
-                          [Constraint.parse('>2')], '<=2')
+                          [Constraint.parse('>2'), Constraint.parse('<=2')])
         # the first 2 constraints will be merge into ==2,
         # which conflicts with !=2
         self.assertRaises(ExclusiveConstraints, merge,
-                          [Constraint.parse('<=2'), Constraint.parse('>=2')],
-                          '!=2')
+                          [Constraint.parse('<=2'), Constraint.parse('>=2'),
+                           Constraint.parse('!=2')])
 
     def test(self):
-        self.assertEqual(merge([Constraint.parse('>1')], '<2'),
-                         [Constraint.parse('>1.0.0'),
-                          Constraint.parse('<2.0.0')])
-        self.assertEqual(merge([Constraint.parse('<2')], '<3'),
+
+        constraints = [Constraint.parse('>1'), Constraint.parse('<2')]
+        self.assertMerge(constraints, constraints)
+
+        self.assertMerge([Constraint.parse('<2'), Constraint.parse('<3')],
                          [Constraint.parse('<2.0.0')])
-        self.assertEqual(merge([Constraint.parse('<2')], '>=1'),
-                         [Constraint.parse('>=1.0.0'),
-                          Constraint.parse('<2.0.0')])
-        self.assertEqual(merge([Constraint.parse('>=2')], '>2'),
+
+        self.assertMerge([Constraint.parse('<2'), Constraint.parse('>=1')],
+                         [Constraint.parse('>=1.0.0'), Constraint.parse('<2.0.0')])
+
+        self.assertMerge([Constraint.parse('>=2'), Constraint.parse('>2')],
                          [Constraint.parse('>2.0.0')])
-        self.assertEqual(merge([Constraint.parse('>1')], '>=2'),
+
+        self.assertMerge([Constraint.parse('>1'), Constraint.parse('>=2')],
                          [Constraint.parse('>=2.0.0')])
-        self.assertEqual(merge([Constraint.parse('<2')], '<=1'),
+
+        self.assertMerge([Constraint.parse('<2'), Constraint.parse('<=1')],
                          [Constraint.parse('<=1.0.0')])
-        self.assertEqual(merge([Constraint.parse('<=2')], '<1'),
+
+        self.assertMerge([Constraint.parse('<=2'), Constraint.parse('<1')],
                          [Constraint.parse('<1.0.0')])
-        self.assertEqual(merge([Constraint.parse('<=2')], '>=2'),
+
+        self.assertMerge([Constraint.parse('<=2'), Constraint.parse('>=2')],
                          [Constraint.parse('==2.0.0')])
+
         # Negative constraints should not be omitted!
-        self.assertEqual(merge([Constraint.parse('!=2')], '!=1'),
-                         [Constraint.parse('!=1.0.0'),
-                          Constraint.parse('!=2.0.0')])
+        self.assertMerge([Constraint.parse('!=2'), Constraint.parse('!=1')],
+                         [Constraint.parse('!=1.0.0'), Constraint.parse('!=2.0.0')])
