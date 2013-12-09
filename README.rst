@@ -3,6 +3,8 @@
 
 versions is a Python library to parse and compare package versions.
 
+Documentation: `versions.rtfd.org <http://versions.rtfd.org/>`_
+
 Basic usage
 -----------
 
