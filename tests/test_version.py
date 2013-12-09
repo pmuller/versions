@@ -118,7 +118,7 @@ class TestVersion(TestCase):
         self.assertEqual(str(Version.parse('1-foo')), '1.0.0-foo')
         self.assertEqual(str(Version.parse('1+foo')), '1.0.0+foo')
         self.assertEqual(str(Version.parse('1-foo+bar.baz')),
-                         '1.0.0-foo+baz.bar')
+                         '1.0.0-foo+bar.baz')
 
     def test_repr(self):
         self.assertEqual(repr(Version(1)), "Version.parse('1.0.0')")

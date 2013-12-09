@@ -203,7 +203,7 @@ class Version(object):
         if self.prerelease:
             version += '-%s' % self.prerelease
         if self.build_metadata:
-            version += '+' + '.'.join(self.build_metadata)
+            version += '+' + '.'.join(sorted(self.build_metadata))
         return version
 
     def __repr__(self):
