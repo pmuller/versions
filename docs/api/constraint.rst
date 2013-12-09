@@ -15,7 +15,7 @@ Examples::
     False
     >>> Version(1, 5) in Constraint.parse('> 1.0')
     True
-    >>> Version(1) in Constraint.parse('>= 2.0.0, < 3.0.0')
+    >>> Version(1) in Constraint.parse('>= 2.0.0')
     False
 
 
