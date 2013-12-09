@@ -1,17 +1,23 @@
 constraints
 -----------
 
-:class:`Constraint` objects can be merged using :class:`Constraints`::
+:class:`Constraint` objects can be merged using a :class:`Constraints` object
+and the ``+`` operator::
 
     >>> from versions import Constraints, Constraint
-    >>> '1.0' in Constraints.parse('>1,<2')
-    False
-    >>> '1.5' in Constraints.parse('>1,<2')
-    True
-    >>> '2.0' in Constraints.parse('>1,<2')
-    False
-    >>> Constraints.parse('>1') + '<2' + '!=1.5'
-    Constraints.parse('>1.0.0,<2.0.0,!=1.5.0')
+    >>> Constraints() + Constraint.parse('<2') + Constraint.parse('!=1.5')
+    Constraints.parse('<2.0.0,!=1.5.0')
+
+
+.. note:: The :class:`Constraints` object must be on the left side of the ``+`` operator.
+    The :class:`Constraint` object must be on right side.
+
+If the constraint is a string, it is automatically parsed into a
+:class:`Constraint` object.
+So the previous example can be shortened as::
+
+    >>> Constraints() + '<2' + '!=1.5'
+    Constraints.parse('<2.0.0,!=1.5.0')
 
 
 Constraints
