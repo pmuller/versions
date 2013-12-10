@@ -152,7 +152,10 @@ class Version(object):
                         get_prerelease_type_precedence(self.prerelease),
                         get_prerelease_type_precedence(other.prerelease))
                     if prerelease_t_cmp == 0:
-                        return cmp(self.prerelease, other.prerelease)
+                        if self.prerelease is None:
+                            return 0
+                        else:
+                            return cmp(self.prerelease, other.prerelease)
                     else:
                         return prerelease_t_cmp
                 else:
