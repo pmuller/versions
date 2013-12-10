@@ -34,6 +34,17 @@ $
 """, re.X)
 
 
+def get_prerelease_type_precedence(prerelease):
+    if prerelease is None:
+        return 2
+    elif isinstance(prerelease, str):
+        return 1
+    elif isinstance(prerelease, int):
+        return 0
+    else:
+        raise TypeError(prerelease)
+
+
 class InvalidVersion(Error):
     """Raised when failing to parse a ``version``.
     """
@@ -124,47 +135,32 @@ class Version(object):
             raise InvalidVersion(version_string)
 
     def __cmp__(self, other):
+        
         if isinstance(other, str):
             other = Version.parse(other)
+        
         if not isinstance(other, Version):
             raise InvalidVersion(other)
-        if self.major > other.major:
-            return 1
-        elif self.major < other.major:
-            return -1
-        else:  # self.major == other.major
-            if self.minor > other.minor:
-                return 1
-            elif self.minor < other.minor:
-                return -1
-            else:  # self.minor == other.minor
-                if self.patch > other.patch:
-                    return 1
-                elif self.patch < other.patch:
-                    return -1
-                else:  # self.patch == other.patch
-                    if self.prerelease is None and other.prerelease is None:
-                        return 0
-                    elif self.prerelease is not None \
-                            and other.prerelease is None:
-                        return -1
-                    elif self.prerelease is None \
-                            and other.prerelease is not None:
-                        return 1
-                    # self.prerelease is not None and
-                    # other.prerelease is not None
-                    else:
-                        if isinstance(self.prerelease, int) and \
-                                not isinstance(other.prerelease, int):
-                            # other string prerelease has precedence
-                            return -1
-                        if not isinstance(self.prerelease, int) and \
-                                isinstance(other.prerelease, int):
-                            # self string prerelease has precedence
-                            return 1
-                        # self.prerelease and other.prerelease are both str
-                        # or int
+
+        major_cmp = cmp(self.major, other.major)
+        if major_cmp == 0:
+            minor_cmp = cmp(self.minor, other.minor)
+            if minor_cmp == 0:
+                patch_cmp = cmp(self.patch, other.patch)
+                if patch_cmp == 0:
+                    prerelease_t_cmp = cmp(
+                        get_prerelease_type_precedence(self.prerelease),
+                        get_prerelease_type_precedence(other.prerelease))
+                    if prerelease_t_cmp == 0:
                         return cmp(self.prerelease, other.prerelease)
+                    else:
+                        return prerelease_t_cmp
+                else:
+                    return patch_cmp
+            else:
+                return minor_cmp
+        else:
+            return major_cmp
 
     def __eq__(self, other):
         return self.__cmp__(other) == 0

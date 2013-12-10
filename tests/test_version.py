@@ -1,6 +1,7 @@
 from unittest import TestCase
 
-from versions.version import Version, InvalidVersion
+from versions.version import Version, InvalidVersion, \
+    get_prerelease_type_precedence
 
 
 class TestVersion(TestCase):
@@ -74,18 +75,15 @@ class TestVersion(TestCase):
     def test_cmp_patch_eq(self):
         self.assertEqual(Version(1, 1, 0).__cmp__('1.1.0'), 0)
 
-    def test_cmp_prerelease_lower_precedence(self):
-        self.assertEqual(Version(1, 1, 0).__cmp__('1.1.0-foo'), 1)
-        self.assertEqual(Version(1, 1, 0, 'foo').__cmp__('1.1.0'), -1)
-
-    def test_cmp_int_prerelease_lower_precedence(self):
-        self.assertEqual(Version(1, 1, 0, 'foo').__cmp__('1.1.0-1'), 1)
-        self.assertEqual(Version(1, 1, 0, 1).__cmp__('1.1.0-foo'), -1)
-
     def test_cmp_prerelease(self):
+        self.assertEqual(Version(1, prerelease='foo').__cmp__(Version(1)), -1)
         self.assertEqual(Version(1, prerelease='foo').__cmp__('1-foo'), 0)
         self.assertEqual(Version(1, prerelease='foo').__cmp__('1-bar'), 1)
         self.assertEqual(Version(1, prerelease='bar').__cmp__('1-foo'), -1)
+        self.assertEqual(Version(1, 1, 0, 'foo').__cmp__('1.1.0-1'), 1)
+        self.assertEqual(Version(1, 1, 0, 1).__cmp__('1.1.0-foo'), -1)
+        self.assertEqual(Version(1, 1, 0).__cmp__('1.1.0-foo'), 1)
+        self.assertEqual(Version(1, 1, 0, 'foo').__cmp__('1.1.0'), -1)
 
     def test_cmp_raise_InvalidVersion(self):
         self.assertRaises(InvalidVersion, Version(1).__cmp__, None)
@@ -122,3 +120,12 @@ class TestVersion(TestCase):
 
     def test_repr(self):
         self.assertEqual(repr(Version(1)), "Version.parse('1.0.0')")
+
+
+class TestGetPrereleaseTypePrecedence(TestCase):
+
+    def test(self):
+        self.assertEqual(get_prerelease_type_precedence(None), 2)
+        self.assertEqual(get_prerelease_type_precedence('foo'), 1)
+        self.assertEqual(get_prerelease_type_precedence(1), 0)
+        self.assertRaises(TypeError, get_prerelease_type_precedence, [])
