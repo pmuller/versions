@@ -21,7 +21,6 @@ setup(
     packages=find_packages(),
     classifiers=(
         'Development Status :: 3 - Alpha',
-        'Environment :: Console',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 2.6',
