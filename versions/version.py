@@ -64,7 +64,7 @@ class Version(object):
     :param prerelease: Version prerelease
     :type prerelease: ``str``, ``int`` or ``None``
     :param build_metadata: Version build metadata
-    :type build_metadata: ``None`` or ``set`` of ``str``
+    :type build_metadata: ``None`` or ``str``
 
     This class constructor is usually not called directly.
     For version string parsing, see ``Version.parse``.
@@ -84,10 +84,8 @@ class Version(object):
         self.build_metadata = build_metadata
 
     def __hash__(self):
-        build_md_h = hash(tuple(self.build_metadata)) if self.build_metadata \
-            else hash(None)
         return hash(self.major) ^ hash(self.minor) ^ hash(self.patch) ^ \
-            hash(self.prerelease) ^ build_md_h
+            hash(self.prerelease) ^ hash(self.build_metadata)
 
     @classmethod
     def parse(cls, version_string):
@@ -101,7 +99,7 @@ class Version(object):
         match = RE.match(version_string)
         if match:
             major_str, minor_str, patch_str, prerelease_str, \
-                build_metadata_str = match.groups()
+                build_metadata = match.groups()
 
             major = int(major_str)
 
@@ -122,12 +120,6 @@ class Version(object):
                     prerelease = prerelease_str
             else:
                 prerelease = None
-
-            if build_metadata_str:
-                build_metadata = set(
-                    s for s in build_metadata_str.split('.') if s)
-            else:
-                build_metadata = None
 
             return cls(major, minor, patch, prerelease, build_metadata)
 
@@ -196,7 +188,7 @@ class Version(object):
         if self.prerelease:
             version += '-%s' % self.prerelease
         if self.build_metadata:
-            version += '+' + '.'.join(sorted(self.build_metadata))
+            version += '+' + self.build_metadata
         return version
 
     def __repr__(self):

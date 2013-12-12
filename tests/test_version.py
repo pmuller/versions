@@ -36,7 +36,7 @@ class TestVersion(TestCase):
         self.assertEqual(v1.minor, 0)
         self.assertEqual(v1.patch, 0)
         self.assertEqual(v1.prerelease, 'dev')
-        self.assertEqual(v1.build_metadata, set(['foo', 'bar']))
+        self.assertEqual(v1.build_metadata, 'foo.bar')
 
     def test_parse_partial(self):
         v1 = Version.parse('1')
