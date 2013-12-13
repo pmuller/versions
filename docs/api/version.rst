@@ -30,6 +30,10 @@ Comparison
     >>> v1 <= v2
     True
 
+.. hint:: When comparing 2 versions, only the version and the pre-release are
+    used.
+    The build metadata are ignored
+
 
 Parsing
 +++++++
@@ -56,9 +60,7 @@ The parser does its best to normalize the passed in string into a
     >>> Version.parse('1.0.0-42')
     Version.parse('1.0.0-42')
 
-
-InvalidVersion
-==============
+When parsing fails, an `InvalidVersion` exception is raised:
 
 .. autoexception:: versions.version.InvalidVersion
     :members:

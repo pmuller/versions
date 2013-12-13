@@ -90,11 +90,7 @@ class Version(object):
     @classmethod
     def parse(cls, version_string):
         """Parses a ``version_string`` and returns a :py:class:`~Version`
-        object::
-
-            >>> Version.parse('1.0.0') > Version.parse('0.1')
-            True
-
+        object.
         """
         match = RE.match(version_string)
         if match:
