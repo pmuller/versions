@@ -33,7 +33,7 @@ returns a corresponding ``Version`` object::
     >>> from versions import Version
     >>> v = Version.parse('1.2.0-dev+foo.bar')
     >>> v.major, v.minor, v.patch, v.prerelease, v.build_metadata
-    (1, 2, 0, 'dev', set(['foo', 'bar']))
+    (1, 2, 0, 'dev', 'foo.bar')
 
 If it isn't a semantic version string, the parser tries to normalize it::
 
