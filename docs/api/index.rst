@@ -10,4 +10,5 @@ Modules:
    constraint
    constraints
    operators
+   packages
    errors
