@@ -33,6 +33,9 @@ class TestConstraints(TestCase):
         self.assertEqual(repr(Constraints.parse('==1')),
                          "Constraints.parse('==1.0.0')")
 
+    def test_eq_invalid_constraints_str(self):
+        self.assertFalse(Constraints() == '#@$!')
+
 
 class TestMerge(TestCase):
 

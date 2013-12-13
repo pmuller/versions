@@ -32,6 +32,11 @@ class Constraints(object):
         self.constraints = list(constraints) if constraints else []
 
     def __eq__(self, other):
+        if isinstance(other, str):
+            try:
+                other = Constraints.parse(other)
+            except Error:
+                return False
         return hash(self) == hash(other)
 
     def __hash__(self):
