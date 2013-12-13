@@ -18,3 +18,7 @@ class TestRequirement(TestCase):
 
     def test_invalid(self):
         self.assertRaises(InvalidRequirement, Requirement.parse, '@($%#$*)@')
+
+    def test_hash(self):
+        self.assertEqual(hash(Requirement.parse('foo')),
+                         hash('foo') ^ hash(None) ^ hash(None))

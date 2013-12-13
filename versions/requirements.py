@@ -53,6 +53,12 @@ class Requirement(object):
         #: `set` of required build options
         self.build_options = build_options
 
+    def __hash__(self):
+        build_options_h = hash(tuple(self.build_options)
+                               if self.build_options else None)
+        return hash(self.name) ^ hash(self.version_constraints) ^ \
+            build_options_h
+
     @classmethod
     def parse(cls, requirement_string):
         """Parses a ``requirement_string`` into a :class:`Requirement` object.
