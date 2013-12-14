@@ -38,3 +38,16 @@ class TestRequirement(TestCase):
     def test_repr(self):
         self.assertEqual(repr(Requirement.parse('foo')),
                          "Requirement.parse('foo')")
+
+    def test_add(self):
+        Requirement.parse('foo==1.0') + 'foo'
+        Requirement.parse('foo[bar]==1.0') + 'foo'
+        Requirement.parse('foo[bar]>=1.0') + 'foo<2'
+        r = Requirement('foo') + 'foo ==1.0'
+        self.assertEqual(r.version_constraints, '==1.0')
+        r2 = Requirement.parse('foo[bar]') + 'foo[baz]'
+        self.assertEqual(r2.build_options, set(['bar', 'baz']))
+
+    def test_add_raises(self):
+        self.assertRaises(InvalidRequirement,
+                          Requirement('foo').__add__, 'bar')

@@ -79,6 +79,30 @@ class Requirement(object):
     def __repr__(self):
         return 'Requirement.parse(%r)' % str(self)
 
+    def __add__(self, requirement):
+        if isinstance(requirement, str):
+            requirement = Requirement.parse(requirement)
+
+        if self.name != requirement.name:
+            raise InvalidRequirement(requirement)
+        
+        if self.version_constraints is None:
+            version_constraints = requirement.version_constraints
+        elif requirement.version_constraints is None:
+            version_constraints = self.version_constraints
+        else:
+            version_constraints = \
+                self.version_constraints + requirement.version_constraints
+
+        if self.build_options is None:
+            build_options = requirement.build_options
+        elif requirement.build_options is None:
+            build_options = self.build_options
+        else:
+            build_options = self.build_options | requirement.build_options
+
+        return Requirement(self.name, version_constraints, build_options)
+
     @classmethod
     def parse(cls, requirement_string):
         """Parses a ``requirement_string`` into a :class:`Requirement` object.
