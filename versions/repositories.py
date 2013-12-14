@@ -24,4 +24,5 @@ class Repository(object):
         """
         if isinstance(requirement, str):
             requirement = Requirement.parse(requirement)
-        return sorted(p for p in self.packages if requirement.match(p))
+        return sorted(p for p in self.packages
+                      if requirement.name == p.name and requirement.match(p))
