@@ -1,11 +1,7 @@
 import re
-import sys
 
 from .errors import Error
-
-
-if sys.version_info[0] == 3:
-    cmp = lambda a, b: (a > b) - (a < b)
+from .compat import cmp
 
 
 # Regular expression used to parse versions.

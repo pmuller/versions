@@ -2,6 +2,7 @@ import re
 
 from .requirements import Requirement
 from .version import Version
+from .compat import cmp
 from .errors import Error
 
 
@@ -79,7 +80,14 @@ class Package(object):
         return hash(self.name) ^ hash(self.version)
 
     def __cmp__(self, other):
-        return self.version.__cmp__(other.version)
+        name_cmp = cmp(self.name, other.name)
+        if name_cmp == 0:
+            return cmp(self.version, other.version)
+        else:
+            return name_cmp
+
+    def __lt__(self, other):
+        return cmp(self, other) == -1
 
     def __str__(self):
         if self.dependencies:

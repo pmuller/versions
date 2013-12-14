@@ -45,3 +45,14 @@ class TestPackage(TestCase):
             Package.parse('foo-1').__cmp__(Package.parse('foo-2')), -1)
         self.assertEqual(
             Package.parse('foo-1').__cmp__(Package.parse('foo-0.1')), 1)
+
+    def test_cmp(self):
+        self.assertEqual(
+            Package.parse('foo-1').__cmp__(Package.parse('foo-1')), 0)
+        self.assertEqual(
+            Package.parse('foo-1').__cmp__(Package.parse('foo-2')), -1)
+        self.assertEqual(
+            Package.parse('foo-1').__cmp__(Package.parse('foo-0.1')), 1)
+
+    def test_lt(self):
+        self.assertTrue(Package.parse('bar-1') < Package.parse('foo-0.1'))
