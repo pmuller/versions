@@ -1,6 +1,7 @@
 version
 -------
 
+.. py:module:: versions.version
 
 Version
 =======

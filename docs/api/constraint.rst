@@ -1,6 +1,8 @@
 constraint
 ----------
 
+.. py:module:: versions.constraint
+
 Constraint
 ==========
 
@@ -11,7 +13,7 @@ Constraint
 Parsing
 +++++++
 
-:class:`Constraint` has a convenient `parse` static method to parse
+:class:`Constraint` has a convenient :meth:`~Constraint.parse` class method to parse
 constrints strings into :class:`Constraint` objects.
 
 Constraint strings are composed of a constraint operator,

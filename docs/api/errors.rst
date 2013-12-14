@@ -1,6 +1,8 @@
 errors
 ------
 
+.. py:module:: versions.errors
+
 Error
 =====
 

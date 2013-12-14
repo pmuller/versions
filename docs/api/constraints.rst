@@ -1,6 +1,7 @@
 constraints
 -----------
 
+.. py:module:: versions.constraints
 
 Constraints
 ===========
@@ -33,7 +34,7 @@ Matching
 ++++++++
 
 :class:`Constraints` objects work like :class:`Constraint` objects: they have
-a `match()` method which returns ``True`` when passed a
+a :meth:`Contraints.match` method which returns ``True`` when passed a
 :class:`Version` matching all constraints::
 
     >>> Constraints.parse('>=1,<2').match('1.4')
@@ -55,6 +56,7 @@ exception is raised::
       File "/Users/pmuller/dev/versions/versions/constraints.py", line 209, in merge
         raise ExclusiveConstraints(g_constraint, [l_constraint])
     versions.constraints.ExclusiveConstraints: Constraint >1.0.0 conflicts with constraints <1.0.0
+
     >>> Constraints.parse('<1') + '==1'
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
@@ -63,6 +65,7 @@ exception is raised::
       File "/Users/pmuller/dev/versions/versions/constraints.py", line 223, in merge
         raise ExclusiveConstraints(eq_constraint, conflict_list)
     versions.constraints.ExclusiveConstraints: Constraint ==1.0.0 conflicts with constraints <1.0.0
+
     >>> Constraints.parse('>=1') + '!=1' + '<=1'
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
