@@ -38,7 +38,7 @@ class TestPackage(TestCase):
         self.assertEqual(repr(Package.parse('foo-1')),
                          "Package.parse('foo-1.0.0')")
 
-    def test_repr(self):
+    def test_cmp(self):
         self.assertEqual(
             Package.parse('foo-1').__cmp__(Package.parse('foo-1')), 0)
         self.assertEqual(
