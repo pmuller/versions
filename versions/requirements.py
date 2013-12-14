@@ -76,6 +76,9 @@ class Requirement(object):
             build_options = ''
         return '%s%s%s' % (self.name, build_options, version_constraints)
 
+    def __repr__(self):
+        return 'Requirement.parse(%r)' % str(self)
+
     @classmethod
     def parse(cls, requirement_string):
         """Parses a ``requirement_string`` into a :class:`Requirement` object.
