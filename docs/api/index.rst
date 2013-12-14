@@ -12,4 +12,5 @@ Modules:
    operators
    packages
    requirements
+   repositories
    errors
