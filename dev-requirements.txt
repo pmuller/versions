@@ -1,0 +1,3 @@
+nose
+sphinx>=1.2
+releases==0.3.0
