@@ -1,6 +1,7 @@
 from unittest import TestCase
 
 from versions.constraint import Constraint, InvalidConstraint
+from versions.constraints import Constraints
 from versions.operators import eq
 from versions.version import Version
 
@@ -26,3 +27,7 @@ class TestConstraint(TestCase):
     def test_repr(self):
         self.assertEqual(repr(Constraint.parse('==1')),
                          "Constraint.parse('==1.0.0')")
+
+    def test_add(self):
+        self.assertEqual(Constraint.parse('>1') + '<2',
+                         Constraints.parse('>1,<2'))

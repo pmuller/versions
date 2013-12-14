@@ -5,7 +5,7 @@ from .operators import Operator
 from .errors import Error
 
 
-#: Regular expression used to parse version constraints
+# Regular expression used to parse version constraints
 RE = re.compile("""
 ^
 \s*
@@ -52,6 +52,10 @@ class Constraint(object):
 
     def __hash__(self):
         return hash(self.operator) ^ hash(self.version)
+
+    def __add__(self, other):
+        from .constraints import Constraints
+        return Constraints([self]) + other
 
     def match(self, version):
         """Match ``version`` with the contraint.
