@@ -67,6 +67,15 @@ class Requirement(object):
                 return False
         return hash(self) == hash(other)
 
+    def __str__(self):
+        version_constraints = \
+            self.version_constraints if self.version_constraints else ''
+        if self.build_options:
+            build_options = '[' + ','.join(self.build_options) + ']'
+        else:
+            build_options = ''
+        return '%s%s%s' % (self.name, build_options, version_constraints)
+
     @classmethod
     def parse(cls, requirement_string):
         """Parses a ``requirement_string`` into a :class:`Requirement` object.

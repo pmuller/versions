@@ -27,3 +27,10 @@ class TestRequirement(TestCase):
         self.assertTrue(Requirement.parse('foo') == 'foo')
         self.assertFalse(Requirement.parse('foo') == 'bar')
         self.assertFalse(Requirement.parse('foo') == '#$@!')
+
+    def test_str(self):
+        self.assertEqual(str(Requirement.parse('foo')), 'foo')
+        self.assertEqual(str(Requirement.parse('foo==1')), 'foo==1.0.0')
+        self.assertEqual(str(Requirement.parse('foo [ bar ]')), 'foo[bar]')
+        self.assertEqual(str(Requirement.parse('vim [python, perl] >7,<8')),
+                         'vim[python,perl]>7.0.0,<8.0.0')
