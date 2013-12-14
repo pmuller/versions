@@ -103,6 +103,39 @@ class Requirement(object):
 
         return Requirement(self.name, version_constraints, build_options)
 
+    def match(self, package):
+        """Match ``package`` with the requirement.
+
+        :param package: Package to test with the requirement.
+        :type package: package expression string or :class:`Package`
+        :returns: ``True`` if ``package`` satisfies the requirement.
+        :rtype: bool
+
+        """
+        if isinstance(package, str):
+            from .packages import Package
+            package = Package.parse(package)
+
+        if self.name != package.name:
+            return False
+
+        if self.version_constraints and \
+                package.version not in self.version_constraints:
+            return False
+
+        if self.build_options:
+            if package.version.build_metadata:
+                pkg_build_opts = set(package.version.build_metadata.split('.'))
+                if self.build_options - pkg_build_opts:
+                    return False
+                else:
+                    return True
+            else:
+                return False
+        else:
+            return True
+    __contains__ = match
+
     @classmethod
     def parse(cls, requirement_string):
         """Parses a ``requirement_string`` into a :class:`Requirement` object.

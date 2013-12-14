@@ -51,3 +51,19 @@ class TestRequirement(TestCase):
     def test_add_raises(self):
         self.assertRaises(InvalidRequirement,
                           Requirement('foo').__add__, 'bar')
+
+    def test_match(self):
+        self.assertTrue(Requirement.parse('foo').match('foo-1.0'))
+        self.assertFalse(Requirement.parse('foo').match('bar-1.0'))
+        self.assertTrue(Requirement.parse('foo>1,<2').match('foo-1.5'))
+        self.assertFalse(Requirement.parse('foo>1,<2').match('foo-2.0'))
+        self.assertFalse(Requirement.parse('vim[python,perl]').match('vim-7.3'))
+        self.assertFalse(Requirement.parse('vim[python,perl]').match('vim-7.3+python'))
+        self.assertTrue(Requirement.parse('vim[python,perl]').match('vim-7.3+python.perl'))
+        self.assertTrue(Requirement.parse('vim[python,perl]').match('vim-7.3+perl.python'))
+        self.assertTrue(Requirement.parse('vim[python,perl]').match('vim-7.3+perl.python.ruby'))
+        self.assertTrue(Requirement.parse('vim[python,perl]>7,<8').match('vim-7.3+perl.python.ruby'))
+        self.assertFalse(Requirement.parse('vim[python,perl]>7,<8').match('vim-6+perl.python.ruby'))
+
+    def test_contains(self):
+        self.assertTrue('foo-1.0' in Requirement.parse('foo'))
