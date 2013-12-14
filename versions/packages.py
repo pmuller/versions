@@ -78,6 +78,20 @@ class Package(object):
     def __hash__(self):
         return hash(self.name) ^ hash(self.version)
 
+    def __cmp__(self, other):
+        return self.version.__cmp__(other.version)
+
+    def __str__(self):
+        if self.dependencies:
+            dependencies = ';depends ' + \
+                ';depends '.join(str(d) for d in self.dependencies)
+        else:
+            dependencies = ''
+        return '%s-%s%s' % (self.name, self.version, dependencies)
+
+    def __repr__(self):
+        return 'Package.parse(%r)' % str(self)
+
     @classmethod
     def parse(self, package_expression):
         """Parse a ``package_expression`` into a :class:`Package` object.
