@@ -11,4 +11,5 @@ Modules:
    constraints
    operators
    packages
+   requirements
    errors
