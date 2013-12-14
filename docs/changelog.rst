@@ -7,6 +7,7 @@ Changelog
 * :feature:`0` :class:`~versions.constraint.Constraint` now supports merging with
   :class:`~versions.constraint.Constraint` or
   :class:`~versions.constraints.Constraints` objects using the ``+`` operator.
+* :support:`0` More documentation for :mod:`~versions.packages`.
 * :release:`0.5.0 <2013-12-13>`
 * :support:`0` Base implementation of :class:`~versions.requirements.Requirement`
 * :release:`0.4.0 <2013-12-13>`
