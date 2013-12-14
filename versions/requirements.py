@@ -71,7 +71,7 @@ class Requirement(object):
         version_constraints = \
             self.version_constraints if self.version_constraints else ''
         if self.build_options:
-            build_options = '[' + ','.join(self.build_options) + ']'
+            build_options = '[' + ','.join(sorted(self.build_options)) + ']'
         else:
             build_options = ''
         return '%s%s%s' % (self.name, build_options, version_constraints)

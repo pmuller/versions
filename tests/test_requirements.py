@@ -33,7 +33,7 @@ class TestRequirement(TestCase):
         self.assertEqual(str(Requirement.parse('foo==1')), 'foo==1.0.0')
         self.assertEqual(str(Requirement.parse('foo [ bar ]')), 'foo[bar]')
         self.assertEqual(str(Requirement.parse('vim [python, perl] >7,<8')),
-                         'vim[python,perl]>7.0.0,<8.0.0')
+                         'vim[perl,python]>7.0.0,<8.0.0')
 
     def test_repr(self):
         self.assertEqual(repr(Requirement.parse('foo')),
