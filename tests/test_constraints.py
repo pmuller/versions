@@ -17,6 +17,11 @@ class TestConstraints(TestCase):
 
     def test_add(self):
         self.assertEqual(Constraints() + '>1', Constraints.parse('>1'))
+        self.assertEqual(Constraints() + Constraints.parse('>1'),
+                         Constraints.parse('>1'))
+        self.assertEqual(Constraints() + Constraint.parse('>1'),
+                         Constraints.parse('>1'))
+        self.assertRaises(TypeError, Constraints().__add__, 42)
 
     def test_iadd(self):
         constraints = Constraints()

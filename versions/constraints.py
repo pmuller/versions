@@ -25,7 +25,7 @@ class ExclusiveConstraints(Error):
 
 
 class Constraints(object):
-    """A collection of :class:`Contraint` objects.
+    """A collection of :class:`Constraint` objects.
     """
     def __init__(self, constraints=None):
         #: List of :class:`Constraint`.
@@ -64,47 +64,36 @@ class Constraints(object):
         else:
             return 'Constraints()'
 
-    def __iadd__(self, constraint):
-        """Add a new constraint to this collection of constraints.
+    def _merge(self, constraint):
+        """Wrapper for :func:`merge`.
 
-        Example::
+        It merges `constraint` with current ones and returns the list of
+        merged constraints.
+        It does not modify the current object.
 
-            >>> constraints = Constraints()
-            >>> constraints += '>1'
-            >>> constraints
-            Constraints.parse('>1.0.0')
-            >>> constraints += '<2'
-            >>> constraints
-            Constraints.parse('>1.0.0,<2.0.0')
+        :param constraint: The constraint(s) to merge with current constraints.
+        :type: :class:`Constraint`, :class:`Constraints` or `str`
+        :returns: List of :class:`Constraint` objects.
+        :rtype: list
 
         """
-        # Parse string constraints
         if isinstance(constraint, str):
-            constraint = Constraint.parse(constraint)
-        # Merge with current constraints
-        self.constraints = merge(self.constraints + [constraint])
+            constraints = [Constraint.parse(constraint)]
+        elif isinstance(constraint, Constraint):
+            constraints = [constraint]
+        elif isinstance(constraint, Constraints):
+            constraints = constraint.constraints
+        else:
+            raise TypeError(constraint)
+
+        return merge(self.constraints + constraints)
+
+    def __iadd__(self, constraint):
+        self.constraints = self._merge(constraint)
         return self
 
     def __add__(self, constraint):
-        """Returns a new constraint collection, resulting in the merge of 
-        this collection with ``constraint``.
-
-        Example::
-
-            >>> constraints = Constraints()
-            >>> constraints
-            Constraints()
-            >>> constraints + '>1'
-            Constraints.parse('>1.0.0')
-            >>> constraints + '>1' + '<2'
-            Constraints.parse('>1.0.0,<2.0.0')
-
-        """
-        # Parse string constraints.
-        if isinstance(constraint, str):
-            constraint = Constraint.parse(constraint)
-        # Merge with current constraints and return a new object
-        return Constraints(merge(self.constraints + [constraint]))
+        return Constraints(self._merge(constraint))
 
     @classmethod
     def parse(cls, constraints_string):
@@ -130,6 +119,7 @@ def merge(constraints):
     # Dictionary :class:`Operator`: set of :class:`Version`.
     operators = defaultdict(set)
     for constraint in constraints:
+        LOGGER.debug('%r %r',type(constraint),constraint)
         operators[constraint.operator].add(constraint.version)
     # Get most recent version required by > constraints.
     if gt in operators:
