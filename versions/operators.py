@@ -10,14 +10,14 @@ OP_FUNC_TO_STR = {operator.eq: '==', operator.ne: '!=', operator.gt: '>',
 STR_TO_OP_FUNC = dict((s, op) for op, s in OP_FUNC_TO_STR.items())
 
 
-class InvalidOperator(Error):
+class InvalidOperatorExpression(Error):
     """Raised when failing to parse an operator.
     """
     def __init__(self, operator):
         #: The bogus operator.
         self.operator = operator
-        message = 'Invalid operator: %r' % operator
-        super(InvalidOperator, self).__init__(message)
+        message = 'Invalid operator expression: %r' % operator
+        super(InvalidOperatorExpression, self).__init__(message)
 
 
 class Operator(object):
@@ -52,7 +52,7 @@ class Operator(object):
         """Parses `string` and returns an :class:`Operator`
         object.
 
-        :raises: :exc:`InvalidOperator` If `string` is not \
+        :raises: :exc:`InvalidOperatorExpression` If `string` is not \
         a valid operator.
 
         Valid operators are ``==``, ``!=``, ``<``, ``>``, ``<=``, and ``>=``.
@@ -61,7 +61,7 @@ class Operator(object):
         if string in STR_TO_OP_FUNC:
             return cls(STR_TO_OP_FUNC[string], string)
         else:
-            raise InvalidOperator(string)
+            raise InvalidOperatorExpression(string)
 
 
 #: == :class:`Operator`

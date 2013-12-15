@@ -7,5 +7,5 @@ operators
     :members: func, string, parse
     :member-order: bysource
 
-.. autoexception:: versions.operators.InvalidOperator
+.. autoexception:: versions.operators.InvalidOperatorExpression
     :members:

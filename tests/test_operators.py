@@ -29,8 +29,8 @@ class TestOperator(TestCase):
         self.assertEqual(operators.Operator.parse('>'),
                          operators.gt)
 
-    def test_parse_raises_InvalidOperator(self):
-        self.assertRaises(operators.InvalidOperator,
+    def test_parse_raises_InvalidOperatorExpression(self):
+        self.assertRaises(operators.InvalidOperatorExpression,
                           operators.Operator.parse, 'junk')
 
     def test_str(self):
