@@ -3,10 +3,32 @@ requirements
 
 .. py:module:: versions.requirements
 
-:class:`Requirement` objects are used to define a requirement on a package
-using constraints on its name, and optionally on its version or build options.
+.. _requirement-expressions:
 
-The :meth:`Requirement.parse` class method parses requirement strings into
+Requirement expressions
+=======================
+
+Requirement expressions are strings representing a required software package.
+They are defined by this EBNF grammar:
+
+.. productionlist::
+    requirement_expression: name build_options? constraints_expression?
+    name: [A-Za-z0-9][-A-Za-z0-9]*
+    build_options: '[' name (',' name)* ']'
+    constraints_expression: constraint_expression (',' constraint_expression)*
+    constraint_expression: operator version_expression
+    operator: '==' | '!=' | '>' | '<' | '<=' | '>='
+    version_expression: main | main '-' prerelease | main '+' build_metadata | main '-' prerelease '+' build_metadata
+    main: major ('.' minor ('.' patch)?)?
+    major: number
+    minor: number
+    patch: number
+    prerelease: string | number
+    build_metadata: string
+    number: [0-9]+
+    string: [0-9a-zA-Z.-]+
+
+The :meth:`Requirement.parse` class method parses requirement expressions into
 :class:`Requirement` objects::
 
     >>> from versions import Requirement
@@ -19,6 +41,10 @@ The :meth:`Requirement.parse` class method parses requirement strings into
     >>> r = Requirement.parse('vim [python, perl] >7')
     >>> r.build_options
     set(['python', 'perl'])
+
+
+Matching
+========
 
 The :meth:`Requirement.match` method returns ``True`` when passed a package
 which satisfies the requirement::
@@ -38,6 +64,9 @@ Matching can also be tested using the ``in`` operator::
     >>> 'foo-0.2' in Requirement.parse('foo [bar] >0.9')
     False
 
+
+Requirement
+===========
 
 .. autoclass:: Requirement
     :members:
