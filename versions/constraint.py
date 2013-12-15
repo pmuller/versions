@@ -58,7 +58,7 @@ class Constraint(object):
         return Constraints([self]) + other
 
     def match(self, version):
-        """Match ``version`` with the contraint.
+        """Match ``version`` with the constraint.
 
         :param version: Version to match against the constraint.
         :type version: :ref:`version expression <version-expressions>` or \

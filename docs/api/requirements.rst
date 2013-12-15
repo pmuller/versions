@@ -15,7 +15,7 @@ The :meth:`Requirement.parse` class method parses requirement strings into
     'foo'
     >>> r = Requirement.parse('foo >1.0, <2.0')
     >>> r.version_constraints
-    Contraints.parse('>1.0.0,<2.0.0')
+    Constraints.parse('>1.0.0,<2.0.0')
     >>> r = Requirement.parse('vim [python, perl] >7')
     >>> r.build_options
     set(['python', 'perl'])
