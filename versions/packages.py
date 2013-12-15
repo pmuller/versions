@@ -76,6 +76,18 @@ class Package(object):
         #: ``set`` of :class:`Requirement` objects
         self.dependencies = dependencies or set()
 
+    @property
+    def build_options(self):
+        """The package build options.
+
+        :returns: :func:`set` of build options strings.
+
+        """
+        if self.version.build_metadata:
+            return set(self.version.build_metadata.split('.'))
+        else:
+            return set()
+
     def __hash__(self):
         return hash(self.name) ^ hash(self.version)
 

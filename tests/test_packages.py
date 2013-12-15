@@ -56,3 +56,7 @@ class TestPackage(TestCase):
 
     def test_lt(self):
         self.assertTrue(Package.parse('bar-1') < Package.parse('foo-0.1'))
+
+    def test_build_options(self):
+        self.assertEqual(Package.parse('foo-1+foo.bar').build_options,
+                         set(['bar', 'foo']))
