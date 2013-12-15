@@ -1,6 +1,7 @@
 from unittest import TestCase
 
-from versions.requirements import Requirement, InvalidRequirement
+from versions.requirements import Requirement, InvalidRequirement, \
+    InvalidRequirementExpression
 
 
 class TestRequirement(TestCase):
@@ -17,7 +18,7 @@ class TestRequirement(TestCase):
         self.assertEqual(r2.build_options, set(['python', 'ruby']))
 
     def test_invalid(self):
-        self.assertRaises(InvalidRequirement, Requirement.parse, '@($%#$*)@')
+        self.assertRaises(InvalidRequirementExpression, Requirement.parse, '@($%#$*)@')
 
     def test_hash(self):
         self.assertEqual(hash(Requirement.parse('foo')),

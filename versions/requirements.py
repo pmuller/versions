@@ -5,13 +5,23 @@ from .constraints import Constraints
 
 
 class InvalidRequirement(Error):
-    """Raised when failing to parse a requirement expression.
+    """Raised when trying to add a requirement with a different package name.
     """
     def __init__(self, requirement):
-        #: The bogus requirement expression
+        #: The bogus requirement
         self.requirement = requirement
         message = 'Invalid requirement: %s' % requirement
         super(InvalidRequirement, self).__init__(message)
+
+
+class InvalidRequirementExpression(Error):
+    """Raised when trying to add a requirement with a different package name.
+    """
+    def __init__(self, requirement_expression):
+        #: The bogus requirement expression
+        self.requirement_expression = requirement_expression
+        message = 'Invalid requirement expression: %s' % requirement_expression
+        super(InvalidRequirementExpression, self).__init__(message)
 
 
 # Regular expression user to parse package requirements.
@@ -136,14 +146,17 @@ class Requirement(object):
     __contains__ = match
 
     @classmethod
-    def parse(cls, requirement_string):
-        """Parses a ``requirement_string`` into a :class:`Requirement` object.
+    def parse(cls, requirement_expression):
+        """Parses a :ref:`requirement_expression <requirement-expressions>`
+        into a :class:`Requirement` object.
 
-        :param str requirement_string: A package requirement expression.
+        :param requirement_expression: A package requirement expression.
+        :type requirement_expression: \
+        :ref:`requirement_expression <requirement-expressions>`
         :rtype: :class:`Requirement`
 
         """
-        match = RE.match(requirement_string)
+        match = RE.match(requirement_expression)
 
         if match:
             name, build_metadata, version_constraints_str = match.groups()
@@ -163,4 +176,4 @@ class Requirement(object):
             return cls(name, version_constraints, build_options)
 
         else:
-            raise InvalidRequirement(requirement_string)
+            raise InvalidRequirementExpression(requirement_expression)
