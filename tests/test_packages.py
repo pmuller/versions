@@ -38,25 +38,19 @@ class TestPackage(TestCase):
         self.assertEqual(repr(Package.parse('foo-1')),
                          "Package.parse('foo-1.0.0')")
 
-    def test_cmp(self):
-        self.assertEqual(
-            Package.parse('foo-1').__cmp__(Package.parse('foo-1')), 0)
-        self.assertEqual(
-            Package.parse('foo-1').__cmp__(Package.parse('foo-2')), -1)
-        self.assertEqual(
-            Package.parse('foo-1').__cmp__(Package.parse('foo-0.1')), 1)
-
-    def test_cmp(self):
-        self.assertEqual(
-            Package.parse('foo-1').__cmp__(Package.parse('foo-1')), 0)
-        self.assertEqual(
-            Package.parse('foo-1').__cmp__(Package.parse('foo-2')), -1)
-        self.assertEqual(
-            Package.parse('foo-1').__cmp__(Package.parse('foo-0.1')), 1)
-
     def test_lt(self):
         self.assertTrue(Package.parse('bar-1') < Package.parse('foo-0.1'))
+        self.assertTrue(Package.parse('foo-1') < Package.parse('foo-2'))
+        self.assertFalse(Package.parse('foo-2') < Package.parse('foo-2'))
+        self.assertFalse(Package.parse('foo-3') < Package.parse('foo-2'))
 
     def test_build_options(self):
         self.assertEqual(Package.parse('foo-1+foo.bar').build_options,
                          set(['bar', 'foo']))
+
+    def test_eq(self):
+        self.assertTrue(Package.parse('foo-1') == 'foo-1')
+        self.assertFalse(Package.parse('foo-1') == 'foo-2')
+        self.assertFalse(Package.parse('foo-1') == 'bar-2')
+        self.assertTrue(Package.parse('foo-1+bar') == 'foo-1+bar')
+        self.assertFalse(Package.parse('foo-1+bar') == 'foo-1+baz')

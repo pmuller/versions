@@ -91,20 +91,24 @@ class Package(object):
     def __hash__(self):
         return hash(self.name) ^ hash(self.version)
 
-    def __cmp__(self, other):
-        name_cmp = cmp(self.name, other.name)
-        if name_cmp == 0:
-            return cmp(self.version, other.version)
-        else:
-            return name_cmp
+    def __eq__(self, other):
+        if isinstance(other, str):
+            other = Package.parse(other)
+        return self.name == other.name and self.version == other.version and \
+            self.build_options == other.build_options
 
     def __lt__(self, other):
-        return cmp(self, other) == -1
+        if self.name < other.name:
+            return True
+        elif self.version < other.version:
+            return True
+        else:
+            return False
 
     def __str__(self):
         if self.dependencies:
             dependencies = ';depends ' + \
-                ';depends '.join(str(d) for d in self.dependencies)
+                ';depends '.join(sorted(map(str, self.dependencies)))
         else:
             dependencies = ''
         return '%s-%s%s' % (self.name, self.version, dependencies)
