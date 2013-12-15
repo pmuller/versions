@@ -124,9 +124,8 @@ class Requirement(object):
             return False
 
         if self.build_options:
-            if package.version.build_metadata:
-                pkg_build_opts = set(package.version.build_metadata.split('.'))
-                if self.build_options - pkg_build_opts:
+            if package.build_options:
+                if self.build_options - package.build_options:
                     return False
                 else:
                     return True
