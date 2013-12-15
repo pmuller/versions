@@ -22,8 +22,8 @@ Version comparison examples::
     >>> v1 <= v2
     True
 
-``Version.parse`` expects a
-`Semantic Version 2.0 <http://semver.org/spec/v2.0.0.html>`_ string and 
+:meth:`.Version.parse` expects a
+:ref:`version expression <version-expressions>` string and 
 returns a corresponding :class:`Version` object::
 
     >>> from versions import Version
@@ -53,7 +53,7 @@ For conveniance, constraint matching can be tested using the ``in`` operator::
 
     >>> '1.5' in Constraint.parse('<2')
     True
-    >>> Version('2') in Constraint.parse('!=2')
+    >>> Version(2) in Constraint.parse('!=2')
     False
 
 Constraints can be merged using :class:`Constraints`::
