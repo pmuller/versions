@@ -2,6 +2,7 @@
 Changelog
 =========
 
+* :feature:`0` Added :class:`~versions.repositories.Repository`
 * :release:`0.6.0 <2013-12-14>`
 * :feature:`0` Completed implementation of :class:`~versions.requirements.Requirement`
 * :feature:`0` :class:`~versions.constraint.Constraint` now supports merging with
