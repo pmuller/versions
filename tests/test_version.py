@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from versions.version import Version, InvalidVersion, \
+from versions.version import Version, InvalidVersionExpression, \
     get_prerelease_type_precedence
 
 
@@ -46,10 +46,10 @@ class TestVersion(TestCase):
         self.assertEqual(v1.prerelease, None)
         self.assertEqual(v1.build_metadata, None)
 
-    def test_parse_raise_InvalidVersion(self):
-        self.assertRaises(InvalidVersion, Version.parse, 'a')
-        self.assertRaises(InvalidVersion, Version.parse, '1.a')
-        self.assertRaises(InvalidVersion, Version.parse, '1.a.b')
+    def test_parse_raise_InvalidVersionExpression(self):
+        self.assertRaises(InvalidVersionExpression, Version.parse, 'a')
+        self.assertRaises(InvalidVersionExpression, Version.parse, '1.a')
+        self.assertRaises(InvalidVersionExpression, Version.parse, '1.a.b')
 
     def test_cmp_major_eq(self):
         self.assertEqual(Version(1).__cmp__('1'), 0)
@@ -85,8 +85,8 @@ class TestVersion(TestCase):
         self.assertEqual(Version(1, 1, 0).__cmp__('1.1.0-foo'), 1)
         self.assertEqual(Version(1, 1, 0, 'foo').__cmp__('1.1.0'), -1)
 
-    def test_cmp_raise_InvalidVersion(self):
-        self.assertRaises(InvalidVersion, Version(1).__cmp__, None)
+    def test_cmp_raise_TypeError(self):
+        self.assertRaises(TypeError, Version(1).__cmp__, None)
 
     def test_eq(self):
         self.assertTrue(Version(1) == Version(1))

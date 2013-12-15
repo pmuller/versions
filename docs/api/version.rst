@@ -51,14 +51,14 @@ Examples of valid version expressions::
     >>> v.major, v.minor, v.patch, v.prerelease, v.build_metadata
     (1, 2, 3, 'dev', 'foo')
 
-When parsing fails, an :exc:`.InvalidVersion` exception is raised::
+When parsing fails, an :exc:`.InvalidVersionExpression` exception is raised::
 
     >>> Version.parse('#@!')
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
       File "versions/version.py", line 119, in parse
-        raise InvalidVersion(version_string)
-    versions.version.InvalidVersion: Invalid version: '#@!'
+        raise InvalidVersionExpression(version_string)
+    versions.version.InvalidVersionExpression: Invalid version expression: '#@!'
 
 
 Version
@@ -96,5 +96,5 @@ Comparison
 Errors
 ++++++
 
-.. autoexception:: versions.version.InvalidVersion
+.. autoexception:: versions.version.InvalidVersionExpression
     :members:

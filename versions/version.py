@@ -41,14 +41,15 @@ def get_prerelease_type_precedence(prerelease):
         raise TypeError(prerelease)
 
 
-class InvalidVersion(Error):
-    """Raised when failing to parse a ``version``.
+class InvalidVersionExpression(Error):
+    """Raised when failing to parse a
+    :ref:`version expression <version-expressions>`.
     """
-    def __init__(self, version):
-        #: The bogus version.
-        self.version = version
-        message = 'Invalid version: %r' % version
-        super(InvalidVersion, self).__init__(message)
+    def __init__(self, version_expression):
+        #: The bogus version expression.
+        self.version_expression = version_expression
+        message = 'Invalid version expression: %r' % version_expression
+        super(InvalidVersionExpression, self).__init__(message)
 
 
 class Version(object):
@@ -116,7 +117,7 @@ class Version(object):
             return cls(major, minor, patch, prerelease, build_metadata)
 
         else:
-            raise InvalidVersion(version_string)
+            raise InvalidVersionExpression(version_string)
 
     def __cmp__(self, other):
         
@@ -124,7 +125,7 @@ class Version(object):
             other = Version.parse(other)
         
         if not isinstance(other, Version):
-            raise InvalidVersion(other)
+            raise TypeError(other)
 
         major_cmp = cmp(self.major, other.major)
         if major_cmp == 0:
