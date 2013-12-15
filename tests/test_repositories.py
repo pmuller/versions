@@ -16,11 +16,11 @@ class TestRepository(TestCase):
             Package.parse('vim-6.0+perl.ruby.python'),
         ])
         repository = Repository(packages)
-        self.assertEqual(repository.get('foo'), sorted([
+        self.assertEqual(repository.get('foo'), [
             Package.parse('foo-1.0'),
             Package.parse('foo-2.0'),
             Package.parse('foo-3.0'),
-        ]))
-        self.assertEqual(repository.get('vim[ruby]>7'), sorted([
+        ])
+        self.assertEqual(repository.get('vim[ruby]>7'), [
             Package.parse('vim-7.4+perl.ruby.python'),
-        ]))
+        ])
