@@ -31,9 +31,9 @@ class Constraint(object):
     """A constraint on a package version.
 
     :param operator: The constraint operator.
-    :type operator: :class:`Operator`
+    :type operator: :class:`.Operator`
     :param version: The constraint version.
-    :type version: :class:`Version`
+    :type version: :class:`.Version`
     """
     def __init__(self, operator, version):
         #: The constraint :class:`Operator`.
@@ -61,7 +61,8 @@ class Constraint(object):
         """Match ``version`` with the contraint.
 
         :param version: Version to match against the constraint.
-        :type version: version string or :class:`Version`
+        :type version: :ref:`version expression <version-expressions>` or \
+        :class:`.Version`
         :rtype: ``True`` if ``version`` satisfies the constraint, \
         ``False`` if it doesn't.
         """
@@ -71,13 +72,17 @@ class Constraint(object):
     __contains__ = match
 
     @classmethod
-    def parse(cls, constraint_string):
-        """Parses a ``constraint`` string and returns a \
-        :class:`Constraint` object.
+    def parse(cls, constraint_expression):
+        """Parses a :ref:`constraint_expression <constraint-expressions>` \
+        and returns a :class:`Constraint` object.
 
-        :raises: :exc:`InvalidConstraint` when parsing fails.
+        :param constraint_expression: A \
+        :ref:`constraint expression <constraint-expressions>`
+        :type constraint_expression: str
+        :raises: :exc:`InvalidConstraintExpression` when parsing fails.
+        :rtype: :class:`Constraint`
         """
-        match = RE.match(constraint_string)
+        match = RE.match(constraint_expression)
 
         if match:
             operator_str, version_str = match.groups()
