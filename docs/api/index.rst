@@ -9,8 +9,8 @@ Modules:
    version
    constraint
    constraints
-   operators
-   packages
    requirements
+   packages
    repositories
+   operators
    errors
