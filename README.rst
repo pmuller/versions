@@ -16,6 +16,7 @@ Basic usage
 -----------
 
 Version comparisons example:
+
 .. code-block:: pycon
 
     >>> from versions import Version
@@ -37,6 +38,7 @@ Version comparisons example:
 ``Version.parse`` expects a
 `Semantic Version 2.0 <http://semver.org/spec/v2.0.0.html>`_ string and 
 returns a corresponding ``Version`` object:
+
 .. code-block:: pycon
 
     >>> from versions import Version
@@ -45,6 +47,7 @@ returns a corresponding ``Version`` object:
     (1, 2, 0, 'dev', 'foo.bar')
 
 If it isn't a semantic version string, the parser tries to normalize it:
+
 .. code-block:: pycon
 
     >>> v = Version.parse('1')
@@ -56,6 +59,7 @@ Version constraint matching
 ---------------------------
 
 versions also implements version constraint parsing and evaluation:
+
 .. code-block:: pycon
 
     >>> from versions import Constraint
@@ -65,6 +69,7 @@ versions also implements version constraint parsing and evaluation:
     True
 
 For conveniance, constraint matching can be tested using the ``in`` operator:
+
 .. code-block:: pycon
 
     >>> '1.5' in Constraint.parse('<2')
@@ -73,6 +78,7 @@ For conveniance, constraint matching can be tested using the ``in`` operator:
     False
 
 Constraints can be merged using ``Constraints``:
+
 .. code-block:: pycon
 
     >>> from versions import Constraints
