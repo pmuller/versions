@@ -2,6 +2,7 @@
 Changelog
 =========
 
+* :release:`0.7.0 <2013-12-15>`
 * :support:`0` Renamed exceptions.
 * :support:`0` Improved all docs!
 * :feature:`0` Added :class:`~versions.repositories.Pool`.
