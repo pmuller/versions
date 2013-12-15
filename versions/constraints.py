@@ -119,7 +119,6 @@ def merge(constraints):
     # Dictionary :class:`Operator`: set of :class:`Version`.
     operators = defaultdict(set)
     for constraint in constraints:
-        LOGGER.debug('%r %r',type(constraint),constraint)
         operators[constraint.operator].add(constraint.version)
     # Get most recent version required by > constraints.
     if gt in operators:
