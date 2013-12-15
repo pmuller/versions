@@ -17,14 +17,14 @@ $
 """, re.X)
 
 
-class InvalidConstraint(Error):
-    """Raised when failing to parse a ``constraint``.
+class InvalidConstraintExpression(Error):
+    """Raised when failing to parse a ``constraint_expression``.
     """
-    def __init__(self, constraint):
-        #: The bogus constraint.
-        self.constraint = constraint
-        message = 'Invalid constraint: %r' % constraint
-        super(InvalidConstraint, self).__init__(message)
+    def __init__(self, constraint_expression):
+        #: The bogus constraint expression.
+        self.constraint_expression = constraint_expression
+        message = 'Invalid constraint expression: %r' % constraint_expression
+        super(InvalidConstraintExpression, self).__init__(message)
 
 
 class Constraint(object):
@@ -86,4 +86,4 @@ class Constraint(object):
             return cls(operator, version)
 
         else:
-            raise InvalidConstraint(constraint_string)
+            raise InvalidConstraintExpression(constraint_expression)

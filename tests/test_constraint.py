@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from versions.constraint import Constraint, InvalidConstraint
+from versions.constraint import Constraint, InvalidConstraintExpression
 from versions.constraints import Constraints
 from versions.operators import eq
 from versions.version import Version
@@ -21,8 +21,9 @@ class TestConstraint(TestCase):
     def test_eq(self):
         self.assertEqual(Constraint.parse('==1.0'), Constraint.parse('==1.0'))
 
-    def test_parse_raises_InvalidConstraint(self):
-        self.assertRaises(InvalidConstraint, Constraint.parse, '')
+    def test_parse_raises_InvalidConstraintExpression(self):
+        self.assertRaises(InvalidConstraintExpression,
+                          Constraint.parse, '#@!$')
 
     def test_repr(self):
         self.assertEqual(repr(Constraint.parse('==1')),
