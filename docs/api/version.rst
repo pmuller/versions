@@ -9,11 +9,10 @@ Version expressions
 ===================
 
 Version expressions are strings representing a software version.
-
 They are defined by this EBNF grammar:
 
 .. productionlist::
-    version expression: main | main '-' prerelease | main '+' build_metadata | main '-' prerelease '+' build_metadata
+    version_expression: main | main '-' prerelease | main '+' build_metadata | main '-' prerelease '+' build_metadata
     main: major ('.' minor ('.' patch)?)?
     major: number
     minor: number
@@ -37,7 +36,7 @@ Part                Default value
 ``build_metadata``  ``None``
 ==================  =============
 
-Example of valid version expressions::
+Examples of valid version expressions::
 
     >>> from versions import Version
     >>> v = Version.parse('1')
