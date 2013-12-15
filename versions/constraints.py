@@ -45,11 +45,11 @@ class Constraints(object):
     def match(self, version):
         """Match ``version`` with this collection of constraints.
 
-        :param version: Version to match against this collection of \
-        constraints.
-        :type version: version string or :class:`Version`
-        :rtype: ``True`` if ``version`` satisfies this collection of \
-        constraint, ``False`` if it doesn't.
+        :param version: Version to match against the constraint.
+        :type version: :ref:`version expression <version-expressions>` or \
+        :class:`.Version`
+        :rtype: ``True`` if ``version`` satisfies the constraint, \
+        ``False`` if it doesn't.
         """
         return all(constraint.match(version)
                    for constraint in self.constraints)
@@ -78,7 +78,7 @@ class Constraints(object):
 
         """
         if isinstance(constraint, str):
-            constraints = [Constraint.parse(constraint)]
+            constraints = Constraints.parse(constraint).constraints
         elif isinstance(constraint, Constraint):
             constraints = [constraint]
         elif isinstance(constraint, Constraints):
@@ -96,13 +96,13 @@ class Constraints(object):
         return Constraints(self._merge(constraint))
 
     @classmethod
-    def parse(cls, constraints_string):
-        """Parses a ``constraints_string`` and returns a
-        :class:`Constraints` object.
+    def parse(cls, constraints_expression):
+        """Parses a :ref:`constraints_expression <constraints-expressions>`
+        and returns a :class:`Constraints` object.
         """
-        constraint_strings = re.split(r'\s*,\s*', constraints_string)
-        return Constraints(merge(Constraint.parse(constraint_str)
-                                 for constraint_str in constraint_strings))
+        constraint_exprs = re.split(r'\s*,\s*', constraints_expression)
+        return Constraints(merge(Constraint.parse(constraint_expr)
+                                 for constraint_expr in constraint_exprs))
 
 
 def merge(constraints):
@@ -111,9 +111,9 @@ def merge(constraints):
     It removes dupplicate, pruned and merged constraints.
 
     :param constraints: Current constraints.
-    :type constraints: Iterable of :class:`Constraint` objects.
-    :rtype: ``list`` of :class:`Constraint` objects.
-    :raises: :exc:`ExclusiveConstraints`
+    :type constraints: Iterable of :class:`.Constraint` objects.
+    :rtype: :func:`list` of :class:`.Constraint` objects.
+    :raises: :exc:`.ExclusiveConstraints`
 
     """
     # Dictionary :class:`Operator`: set of :class:`Version`.
