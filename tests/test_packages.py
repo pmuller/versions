@@ -54,3 +54,6 @@ class TestPackage(TestCase):
         self.assertFalse(Package.parse('foo-1') == 'bar-2')
         self.assertTrue(Package.parse('foo-1+bar') == 'foo-1+bar')
         self.assertFalse(Package.parse('foo-1+bar') == 'foo-1+baz')
+
+    def test_upgrade_requirement(self):
+        self.assertEqual(Package.parse('foo-1').upgrade_requirement, 'foo>1')

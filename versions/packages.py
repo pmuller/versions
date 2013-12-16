@@ -4,6 +4,10 @@ from .requirements import Requirement
 from .version import Version
 from .compat import cmp
 from .errors import Error
+from .operators import gt
+from .constraints import Constraints
+from .constraint import Constraint
+from .version import Version
 
 
 RE = re.compile(r"""
@@ -115,6 +119,18 @@ class Package(object):
 
     def __repr__(self):
         return 'Package.parse(%r)' % str(self)
+
+    @property
+    def upgrade_requirement(self):
+        # create a copy of current version
+        version = Version(self.version.major, self.version.minor,
+                          self.version.patch, self.version.prerelease,
+                          self.version.build_metadata)
+        # strip the build metadata
+        version.build_metadata = None
+        constraint = Constraint(gt, version)
+        return Requirement(self.name, Constraints([constraint]),
+                           self.build_options)
 
     @classmethod
     def parse(self, package_expression):
