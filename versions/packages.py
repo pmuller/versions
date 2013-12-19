@@ -95,6 +95,9 @@ class Package(object):
     def __hash__(self):
         return hash(self.name) ^ hash(self.version)
 
+    def __ne__(self, other):
+        return not (self == other)
+
     def __eq__(self, other):
         if isinstance(other, str):
             other = Package.parse(other)
