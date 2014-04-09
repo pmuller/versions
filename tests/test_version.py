@@ -50,6 +50,35 @@ class TestVersion(TestCase):
         self.assertRaises(InvalidVersionExpression, Version.parse, 'a')
         self.assertRaises(InvalidVersionExpression, Version.parse, '1.a')
         self.assertRaises(InvalidVersionExpression, Version.parse, '1.a.b')
+        # Can't have both pre- and post-release information !
+        self.assertRaises(InvalidVersionExpression, Version.parse, '1.0.1l-dev')
+
+    def test_parse_postrelease(self):
+        v = Version.parse('1.0.1l')
+        self.assertEqual(v.major, 1)
+        self.assertEqual(v.minor, 0)
+        self.assertEqual(v.patch, 1)
+        self.assertEqual(v.postrelease, 'l')
+        self.assertEqual(v.prerelease, None)
+        self.assertEqual(v.build_metadata, None)
+
+    def test_cmp_postrelease(self):
+        v101 = Version.parse('1.0.1')
+        v101a = Version.parse('1.0.1a')
+        v101b = Version.parse('1.0.1b')
+        self.assertEqual(v101.__cmp__(v101a), -1)
+        self.assertEqual(v101.__cmp__(v101b), -1)
+        self.assertEqual(v101a.__cmp__(v101), 1)
+        self.assertEqual(v101a.__cmp__(v101a), 0)
+        self.assertEqual(v101a.__cmp__(v101b), -1)
+        self.assertEqual(v101b.__cmp__(v101), 1)
+        self.assertEqual(v101b.__cmp__(v101a), 1)
+        self.assertEqual(v101b.__cmp__(v101b), 0)
+
+    def test_cmp_pre_and_postrelease(self):
+        self.assertTrue(Version.parse('1.0.1a') > Version.parse('1.0.1-foo'))
+        self.assertTrue(Version.parse('1.0.1-foo') < Version.parse('1.0.1f'))
+        self.assertTrue(Version.parse('1.0.1f') == Version.parse('1.0.1f'))
 
     def test_cmp_major_eq(self):
         self.assertEqual(Version(1).__cmp__('1'), 0)
@@ -80,10 +109,10 @@ class TestVersion(TestCase):
         self.assertEqual(Version(1, prerelease='foo').__cmp__('1-foo'), 0)
         self.assertEqual(Version(1, prerelease='foo').__cmp__('1-bar'), 1)
         self.assertEqual(Version(1, prerelease='bar').__cmp__('1-foo'), -1)
-        self.assertEqual(Version(1, 1, 0, 'foo').__cmp__('1.1.0-1'), 1)
-        self.assertEqual(Version(1, 1, 0, 1).__cmp__('1.1.0-foo'), -1)
+        self.assertEqual(Version(1, 1, 0, prerelease='foo').__cmp__('1.1.0-1'), 1)
+        self.assertEqual(Version(1, 1, 0, prerelease=1).__cmp__('1.1.0-foo'), -1)
         self.assertEqual(Version(1, 1, 0).__cmp__('1.1.0-foo'), 1)
-        self.assertEqual(Version(1, 1, 0, 'foo').__cmp__('1.1.0'), -1)
+        self.assertEqual(Version(1, 1, 0, prerelease='foo').__cmp__('1.1.0'), -1)
 
     def test_cmp_raise_TypeError(self):
         self.assertRaises(TypeError, Version(1).__cmp__, None)

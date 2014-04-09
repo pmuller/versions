@@ -13,10 +13,11 @@ They are defined by this EBNF grammar:
 
 .. productionlist::
     version_expression: main | main '-' prerelease | main '+' build_metadata | main '-' prerelease '+' build_metadata
-    main: major ('.' minor ('.' patch)?)?
+    main: major ('.' minor ('.' patch)?)? postrelease?
     major: number
     minor: number
     patch: number
+    postrelease: string
     prerelease: string | number
     build_metadata: string
     number: [0-9]+
@@ -32,6 +33,7 @@ Part                Default value
 ==================  =============
 ``minor``           0
 ``patch``           0
+``postrelease``     ``None``
 ``prerelease``      ``None``
 ``build_metadata``  ``None``
 ==================  =============

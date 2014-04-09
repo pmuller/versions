@@ -18,6 +18,7 @@ RE = re.compile("""
         (?P<patch>\d+)
     )?
 )?
+(?P<postrelease>[A-Za-z]+)?
 (?:
     -
     (?P<prerelease>[0-9a-zA-Z.-]*)
@@ -41,7 +42,12 @@ def get_prerelease_type_precedence(prerelease):
         raise TypeError(prerelease)
 
 
-class InvalidVersionExpression(Error):
+class InvalidVersion(Error):
+    """Raised when a software version is invalid.
+    """
+
+
+class InvalidVersionExpression(InvalidVersion):
     """Raised when failing to parse a
     :ref:`version expression <version-expressions>`.
     """
@@ -67,14 +73,21 @@ class Version(object):
     For version string parsing, see ``Version.parse``.
 
     """
-    def __init__(self, major, minor=0, patch=0, prerelease=None,
-                 build_metadata=None):
+    def __init__(self, major, minor=0, patch=0, postrelease=None,
+                 prerelease=None, build_metadata=None):
+
+        if postrelease and prerelease:
+            raise InvalidVersion('A version cannot both have a pre- '
+                                 'and a post-release identifier')
+
         #: Version major number
         self.major = major
         #: Version minor number
         self.minor = minor
         #: Version patch number
         self.patch = patch
+        #: Version postrelease
+        self.postrelease = postrelease
         #: Version prerelease
         self.prerelease = prerelease
         #: Version build metadata
@@ -91,8 +104,13 @@ class Version(object):
         """
         match = RE.match(version_string)
         if match:
-            major_str, minor_str, patch_str, prerelease_str, \
-                build_metadata = match.groups()
+            major_str, minor_str, patch_str, postrelease, \
+                prerelease_str, build_metadata = match.groups()
+
+            # A well-defined version cannot both have a pre- and a
+            # post-release identifier.
+            if postrelease and prerelease_str:
+                raise InvalidVersionExpression(version_string)
 
             major = int(major_str)
 
@@ -114,7 +132,8 @@ class Version(object):
             else:
                 prerelease = None
 
-            return cls(major, minor, patch, prerelease, build_metadata)
+            return cls(major, minor, patch,
+                       postrelease, prerelease, build_metadata)
 
         else:
             raise InvalidVersionExpression(version_string)
@@ -133,16 +152,23 @@ class Version(object):
             if minor_cmp == 0:
                 patch_cmp = cmp(self.patch, other.patch)
                 if patch_cmp == 0:
-                    prerelease_t_cmp = cmp(
-                        get_prerelease_type_precedence(self.prerelease),
-                        get_prerelease_type_precedence(other.prerelease))
-                    if prerelease_t_cmp == 0:
-                        if self.prerelease is None:
-                            return 0
-                        else:
-                            return cmp(self.prerelease, other.prerelease)
+                    if self.postrelease and not other.postrelease:
+                        return 1
+                    elif not self.postrelease and other.postrelease:
+                        return -1
+                    elif self.postrelease != other.postrelease:
+                        return cmp(self.postrelease, other.postrelease)
                     else:
-                        return prerelease_t_cmp
+                        prerelease_t_cmp = cmp(
+                            get_prerelease_type_precedence(self.prerelease),
+                            get_prerelease_type_precedence(other.prerelease))
+                        if prerelease_t_cmp == 0:
+                            if self.prerelease is None:
+                                return 0
+                            else:
+                                return cmp(self.prerelease, other.prerelease)
+                        else:
+                            return prerelease_t_cmp
                 else:
                     return patch_cmp
             else:
