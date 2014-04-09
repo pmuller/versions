@@ -4,9 +4,6 @@ versions: Python software packaging library
 .. image:: https://badge.fury.io/py/versions.png
     :target: http://badge.fury.io/py/versions
 
-.. image:: https://pypip.in/d/versions/badge.png
-    :target: https://crate.io/packages/versions/
-
 .. image:: https://secure.travis-ci.org/pmuller/versions.png?branch=master
         :target: https://travis-ci.org/pmuller/versions
 
