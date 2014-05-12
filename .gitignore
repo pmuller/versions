@@ -37,8 +37,11 @@ nosetests.xml
 
 *.swp
 
-# Python coverage
+# Python coverage report directory
 cover
+
+# Python virtualenv directory
+virtualenv
 
 # docs build
 docs/_build
