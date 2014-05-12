@@ -2,6 +2,7 @@ from unittest import TestCase
 
 from versions.repositories import Repository, Pool
 from versions.packages import Package
+from versions.requirements import Requirement
 
 
 class TestRepository(TestCase):
@@ -44,5 +45,8 @@ class TestPool(TestCase):
             Package.parse('foo-3.0'),
         ])
         self.assertEqual(pool.get('vim[ruby]>7'), [
+            Package.parse('vim-7.4+perl.ruby.python'),
+        ])
+        self.assertEqual(pool.get(Requirement.parse('vim[ruby]>7')), [
             Package.parse('vim-7.4+perl.ruby.python'),
         ])
