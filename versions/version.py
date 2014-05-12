@@ -1,7 +1,7 @@
 import re
 
 from .errors import Error
-from .compat import cmp
+from .compat import cmp, basestring
 
 
 # Regular expression used to parse versions.
@@ -41,7 +41,7 @@ $
 def get_prerelease_type_precedence(prerelease):
     if prerelease is None:
         return 2
-    elif isinstance(prerelease, str):
+    elif isinstance(prerelease, basestring):
         return 1
     elif isinstance(prerelease, int):
         return 0
@@ -50,7 +50,7 @@ def get_prerelease_type_precedence(prerelease):
 
 
 def get_postrelease_type_precedence(postrelease):
-    if isinstance(postrelease, str):
+    if isinstance(postrelease, basestring):
         return 2
     elif isinstance(postrelease, int):
         return 1
@@ -166,7 +166,7 @@ class Version(object):
             raise InvalidVersionExpression(version_string)
 
     def __cmp__(self, other):
-        if isinstance(other, str):
+        if isinstance(other, basestring):
             other = Version.parse(other)
         
         if not isinstance(other, Version):

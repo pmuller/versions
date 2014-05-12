@@ -3,6 +3,7 @@ import re
 from .version import Version
 from .operators import Operator
 from .errors import Error
+from .compat import basestring
 
 
 # Regular expression used to parse version constraints
@@ -66,7 +67,7 @@ class Constraint(object):
         :rtype: ``True`` if ``version`` satisfies the constraint, \
         ``False`` if it doesn't.
         """
-        if isinstance(version, str):
+        if isinstance(version, basestring):
             version = Version.parse(version)
         return self.operator(version, self.version)
     __contains__ = match

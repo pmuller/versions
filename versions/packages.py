@@ -2,7 +2,7 @@ import re
 
 from .requirements import Requirement
 from .version import Version
-from .compat import cmp
+from .compat import basestring
 from .errors import Error
 from .operators import gt
 from .constraints import Constraints
@@ -99,7 +99,7 @@ class Package(object):
         return not (self == other)
 
     def __eq__(self, other):
-        if isinstance(other, str):
+        if isinstance(other, basestring):
             other = Package.parse(other)
         return self.name == other.name and self.version == other.version and \
             self.build_options == other.build_options

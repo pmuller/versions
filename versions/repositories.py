@@ -1,4 +1,5 @@
 from .requirements import Requirement
+from .compat import basestring
 
 
 class Repository(object):
@@ -20,7 +21,7 @@ class Repository(object):
         :returns: :func:`list` of matching :class:`.Package` objects.
 
         """
-        if isinstance(requirement, str):
+        if isinstance(requirement, basestring):
             requirement = Requirement.parse(requirement)
         return sorted(p for p in self.packages
                       if requirement.name == p.name and requirement.match(p))
@@ -49,7 +50,7 @@ class Pool(object):
         :returns: :func:`list` of matching :class:`.Package` objects.
 
         """
-        if isinstance(requirement, str):
+        if isinstance(requirement, basestring):
             requirement = Requirement.parse(requirement)
         packages = set()
         for repository in self.repositories:

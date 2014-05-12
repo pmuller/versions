@@ -2,6 +2,7 @@ import re
 
 from .errors import Error
 from .constraints import Constraints
+from .compat import basestring
 
 
 class InvalidRequirement(Error):
@@ -70,7 +71,7 @@ class Requirement(object):
             build_options_h
 
     def __eq__(self, other):
-        if isinstance(other, str):
+        if isinstance(other, basestring):
             try:
                 other = Requirement.parse(other)
             except Error:
@@ -90,7 +91,7 @@ class Requirement(object):
         return 'Requirement.parse(%r)' % str(self)
 
     def __add__(self, requirement):
-        if isinstance(requirement, str):
+        if isinstance(requirement, basestring):
             requirement = Requirement.parse(requirement)
 
         if self.name != requirement.name:
@@ -122,7 +123,7 @@ class Requirement(object):
         :rtype: bool
 
         """
-        if isinstance(package, str):
+        if isinstance(package, basestring):
             from .packages import Package
             package = Package.parse(package)
 

@@ -5,6 +5,7 @@ from collections import defaultdict
 from .constraint import Constraint
 from .operators import eq, lt, gt, le, ge, ne
 from .errors import Error
+from .compat import basestring
 
 
 LOGGER = logging.getLogger(__name__)
@@ -32,7 +33,7 @@ class Constraints(object):
         self.constraints = list(constraints) if constraints else []
 
     def __eq__(self, other):
-        if isinstance(other, str):
+        if isinstance(other, basestring):
             try:
                 other = Constraints.parse(other)
             except Error:
@@ -77,7 +78,7 @@ class Constraints(object):
         :rtype: list
 
         """
-        if isinstance(constraint, str):
+        if isinstance(constraint, basestring):
             constraints = Constraints.parse(constraint).constraints
         elif isinstance(constraint, Constraint):
             constraints = [constraint]
