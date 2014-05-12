@@ -41,7 +41,7 @@ class TestRequirement(TestCase):
                          "Requirement.parse('foo')")
 
     def test_add(self):
-        Requirement.parse('foo==1.0') + 'foo'
+        Requirement.parse('foo==1.0') + Requirement.parse('foo')
         Requirement.parse('foo[bar]==1.0') + 'foo'
         Requirement.parse('foo[bar]>=1.0') + 'foo<2'
         r = Requirement('foo') + 'foo ==1.0'
