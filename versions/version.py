@@ -96,7 +96,6 @@ class Version(object):
     def __init__(self, major, minor=0, patch=0, postrelease=None,
                  prerelease=None, build_metadata=None):
 
-        print 'wtf', postrelease, prerelease
         if postrelease is not None and prerelease is not None:
             raise InvalidVersion('A version cannot both have a pre- '
                                  'and a post-release identifier')
