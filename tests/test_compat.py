@@ -11,4 +11,4 @@ class TestBaseString(TestCase):
         self.assertFalse(isinstance(42, basestring))
 
         if sys.version_info[0] == 2:
-            self.assertTrue(isinstance(u'foo', basestring))
+            self.assertTrue(isinstance(unicode('foo'), basestring))
