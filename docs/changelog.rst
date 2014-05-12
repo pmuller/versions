@@ -2,6 +2,7 @@
 Changelog
 =========
 
+* :release:`0.10.0 <2014-05-12>`
 * :support:`0` Improved ascii/unicode strings handling across Python versions.
 * :release:`0.9.0 <2014-05-12>`
 * :feature:`0` Allow for post-release identifiers using a 4th number identifier (eg. ``1.0.0.42``).
