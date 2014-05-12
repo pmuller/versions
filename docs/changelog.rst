@@ -2,6 +2,7 @@
 Changelog
 =========
 
+* :feature:`0` Allow for post-release identifiers using a 4th number identifier (eg. ``1.0.0.42``).
 * :release:`0.8.0 <2014-04-09>`
 * :feature:`0` Allow for post-release identifiers in versions (eg. ``1.0.1f``).
 * :release:`0.7.0 <2013-12-15>`

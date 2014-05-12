@@ -1,7 +1,8 @@
 from unittest import TestCase
 
 from versions.version import Version, InvalidVersionExpression, \
-    get_prerelease_type_precedence
+    get_prerelease_type_precedence, get_postrelease_type_precedence, \
+    InvalidVersion
 
 
 class TestVersion(TestCase):
@@ -80,6 +81,27 @@ class TestVersion(TestCase):
         self.assertTrue(Version.parse('1.0.1-foo') < Version.parse('1.0.1f'))
         self.assertTrue(Version.parse('1.0.1f') == Version.parse('1.0.1f'))
 
+    def test_parse_postrelease_digits(self):
+        v = Version.parse('2.8.12.3')
+        self.assertEqual(v.major, 2)
+        self.assertEqual(v.minor, 8)
+        self.assertEqual(v.patch, 12)
+        self.assertEqual(v.postrelease, 3)
+        self.assertEqual(v.prerelease, None)
+        self.assertEqual(v.build_metadata, None)
+
+        v12 = Version.parse('2.8.12')
+        self.assertTrue(v > v12)
+        self.assertTrue(v12 < v)
+
+        v12_1 = Version.parse('2.8.12.1')
+        self.assertTrue(v > v12_1)
+        self.assertTrue(v12_1 < v)
+
+        v12_5 = Version.parse('2.8.12.5')
+        self.assertTrue(v < v12_5)
+        self.assertTrue(v12_5 > v)
+
     def test_cmp_major_eq(self):
         self.assertEqual(Version(1).__cmp__('1'), 0)
 
@@ -146,15 +168,30 @@ class TestVersion(TestCase):
         self.assertEqual(str(Version.parse('1+foo')), '1.0.0+foo')
         self.assertEqual(str(Version.parse('1-foo+bar.baz')),
                          '1.0.0-foo+bar.baz')
+        self.assertEqual(str(Version.parse('1.0.1a')), '1.0.1a')
+        self.assertEqual(str(Version.parse('1.0.1.2')), '1.0.1.2')
 
     def test_repr(self):
         self.assertEqual(repr(Version(1)), "Version.parse('1.0.0')")
 
+    def test_raises_when_having_both_pre_and_postrelease(self):
+        self.assertRaises(InvalidVersion,
+                          Version, 1, prerelease=1, postrelease=1)
 
-class TestGetPrereleaseTypePrecedence(TestCase):
+
+class TestPrereleaseTypePrecedence(TestCase):
 
     def test(self):
         self.assertEqual(get_prerelease_type_precedence(None), 2)
         self.assertEqual(get_prerelease_type_precedence('foo'), 1)
         self.assertEqual(get_prerelease_type_precedence(1), 0)
-        self.assertRaises(TypeError, get_prerelease_type_precedence, [])
+        self.assertRaises(TypeError, get_prerelease_type_precedence)
+
+
+class TestPostreleaseTypePrecedence(TestCase):
+
+    def test(self):
+        self.assertEqual(get_postrelease_type_precedence(None), 0)
+        self.assertEqual(get_postrelease_type_precedence('foo'), 2)
+        self.assertEqual(get_postrelease_type_precedence(1), 1)
+        self.assertRaises(TypeError, get_postrelease_type_precedence)
