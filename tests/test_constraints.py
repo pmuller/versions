@@ -90,4 +90,5 @@ class TestMerge(TestCase):
 
         # Negative constraints should not be omitted!
         self.assertMerge([Constraint.parse('!=2'), Constraint.parse('!=1')],
-                         [Constraint.parse('!=1.0.0'), Constraint.parse('!=2.0.0')])
+                         sorted([Constraint.parse('!=1.0.0'),
+                                 Constraint.parse('!=2.0.0')]))
